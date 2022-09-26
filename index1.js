@@ -2,6 +2,8 @@ const fs=require('fs');
 const http=require('http');
 const url=require("url");
 
+const slugify=require("slugify");//slug=last part of url that contains uniquely identifying string for url
+
 const replace_template=require("./modules/replaceTemplate.js");//imports the function from replaceTemplate.js
 
 
@@ -12,7 +14,12 @@ const template_overview=fs.readFileSync(`${__dirname}/templates/template_overvie
 const template_card=fs.readFileSync(`${__dirname}/templates/template_card.html`,'utf-8');
 const template_product=fs.readFileSync(`${__dirname}/templates/template_product.html`,'utf-8');//we can res.send html files and it renders like that
 const data_obj=JSON.parse(data);//makes JSON string to JS obj
-const server=http.createServer((req,res)=>//(req,res) callback, called each time a new request hits the server 
+
+const slugs=data_obj.map((data)=>slugify(data.productName,{lower: true}));//adds dashes and lowercases each productName
+console.log(slugs);//puts it all in a slugs array
+console.log(slugify('Fresh Avocadoes',{lower: true}));
+const server=http.createServer((req,res)=>//(req,res)
+ //callback, called each time a new request hits the server 
 {
     //console.log(url.parse(req.url,true));//parses req.url into object
     const parsed=url.parse(req.url,true);//url.parse takes in a url and returns object w/ url properties
